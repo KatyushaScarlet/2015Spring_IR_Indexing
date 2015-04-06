@@ -5,7 +5,7 @@ WARC Indexer
 2. 會產生
 
 #### 使用方式
-`python3 main.py filename [-m] [-gz] [-cf] [-sw]`
+`python3 main.py filename [-m] [-gz] [-cf] [-sw] [-st]`
 ##### Parameters:
 1. -m 使用多執行緒製作索引檔
 2. -gz 將索引檔案使用gzip進行壓縮
