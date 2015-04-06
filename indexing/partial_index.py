@@ -46,6 +46,7 @@ class PartialIndex:
             val = content[1].split(',')
             for v in val:
                 pi.push(content[0], int(v))
+        f.close()
         return pi
 
     def dump(self, filename):
@@ -80,4 +81,5 @@ class PartialIndex:
             val = content[1].split(',')
             for v in val:
                 pi.push(content[0], int(v))
+        f.close()
         return pi

@@ -14,6 +14,7 @@ from html.parser import HTMLParser
 from indexing.partial_index import PartialIndex
 from indexing.index import Index
 
+CASE_FOLDING = False
 
 class WarcHTMLParser(HTMLParser):
     lineCount = []
@@ -43,7 +44,10 @@ class WarcHTMLParser(HTMLParser):
             word = re.compile('[A-Za-z]+')
             words = word.finditer(data)
             for w in words:
-                self.index.push(w.group(0), w.start() + offset)
+                if CASE_FOLDING:
+                    self.index.push(w.group(0).lower(), w.start() + offset)
+                else:
+                    self.index.push(w.group(0), w.start() + offset)
 
 
 def processing(_content: str, offset: int) -> PartialIndex:
@@ -189,6 +193,8 @@ def main():
 
     multi_flag = False
     gzip_flag = False
+    if "-cf" in sys.argv:
+        CASE_FOLDING = True
     if "-gz" in sys.argv:
         gzip_flag = True
     if "-m" in sys.argv:

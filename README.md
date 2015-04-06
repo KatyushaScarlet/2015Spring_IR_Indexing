@@ -5,10 +5,11 @@ WARC Indexer
 2. 會產生
 
 #### 使用方式
-`python3 main.py filename [-m] [-gz]`
+`python3 main.py filename [-m] [-gz] [-cf]`
 ##### Parameters:
 1. -m 使用多執行緒製作索引檔
 2. -gz 將索引檔案使用gzip進行壓縮
+3. -cf use case folding (default is not use)
 ##### Example:
 `python3 main.py ClueWeb09_English_Sample.warc -m -gz`
 ##### Output
