@@ -120,7 +120,6 @@ class WarcHTMLParser(HTMLParser):
                         self.index.push(w.group(0), w.start() + offset)
 
 
-
 def processing(_content: str, offset: int) -> PartialIndex:
     ph = WarcHTMLParser()
     ph.pre_offset = offset
@@ -245,7 +244,10 @@ def single_version(_parser: Parser):
                 gc.collect()
             idx.read_partial_index(i, PartialIndex.read(tmp_dir_name + "/" + str(i)))
             os.remove(tmp_dir_name + "/" + str(i))
-        os.rmdir(tmp_dir_name)
+        try:
+            os.rmdir(tmp_dir_name)
+        except Exception:
+            pass
         print("----------------------------------------------------------")
         print("Build full index:")
         end_time = time.time()
