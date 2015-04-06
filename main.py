@@ -9,6 +9,8 @@ import random
 import string
 import gc
 
+from stemming.porter2 import stem
+
 from warc.parser import Parser
 from html.parser import HTMLParser
 from indexing.partial_index import PartialIndex
@@ -21,6 +23,7 @@ class WarcHTMLParser(HTMLParser):
     pre_offset = 0
     case_folding = False
     stopword_remove = False
+    stemming = False
     stopwords = ['a', 'about', 'above', 'across', 'after', 'again', 'against', 'all', 'almost', 'alone', 'along',
                  'already',
                  'also', 'although', 'always', 'among', 'an', 'and', 'another', 'any', 'anybody', 'anyone', 'anything',
@@ -105,10 +108,17 @@ class WarcHTMLParser(HTMLParser):
                 if WarcHTMLParser.stopword_remove:
                     if w.group(0).lower() in self.stopwords:
                         continue
-                if self.case_folding:
-                    self.index.push(w.group(0).lower(), w.start() + offset)
+                if WarcHTMLParser.case_folding:
+                    if WarcHTMLParser.stemming:
+                        self.index.push(stem(w.group(0).lower()), w.start() + offset)
+                    else:
+                        self.index.push(w.group(0).lower(), w.start() + offset)
                 else:
-                    self.index.push(w.group(0), w.start() + offset)
+                    if WarcHTMLParser.stemming:
+                        self.index.push(stem(w.group(0)), w.start() + offset)
+                    else:
+                        self.index.push(w.group(0), w.start() + offset)
+
 
 
 def processing(_content: str, offset: int) -> PartialIndex:
@@ -255,6 +265,8 @@ def main():
     multi_flag = False
     gzip_flag = False
 
+    if "-st" in sys.argv:
+        WarcHTMLParser.stemming = True
     if "-sw" in sys.argv:
         WarcHTMLParser.stopword_remove = True
     if "-cf" in sys.argv:

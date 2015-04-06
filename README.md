@@ -11,6 +11,7 @@ WARC Indexer
 2. -gz 將索引檔案使用gzip進行壓縮
 3. -cf use case folding (default is not use)
 4. -sw use stopword removal (default is not use)
+5. -st use stemming (default is not use)
 ##### Example:
 `python3 main.py ClueWeb09_English_Sample.warc -m -gz`
 ##### Output
