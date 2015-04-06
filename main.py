@@ -191,7 +191,10 @@ def multi_version(_parser: Parser) -> int:
             gc.collect()
         idx.read_partial_index(i, PartialIndex.read(tmp_dir_name + "/" + str(i)))
         os.remove(tmp_dir_name + "/" + str(i))
-    os.rmdir(tmp_dir_name)
+    try:
+        os.rmdir(tmp_dir_name)
+    except Exception:
+        pass
     print("----------------------------------------------------------")
     print("Build full index:")
     end_time = time.time()
