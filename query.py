@@ -11,6 +11,17 @@ from indexing.index import Index
 file_name = "00.warc"
 
 
+def usage():
+    print("Usage:")
+    print("\tpython3", sys.argv[0], "[-r number] -q free_query_text")
+    print("\tpython3", sys.argv[0], "-h")
+    print("\r\nParameter:")
+    print("\t", "-r\t", "control that how many document may display. default is 10")
+    print("\t", "-q\t", "free text query term")
+    print("\t", "-h\t", "show this helper")
+    exit(0)
+
+
 def query():
     idx_file = file_name + "_index.idx"
     dict_file = file_name + "_index.dict"
@@ -24,10 +35,10 @@ def query():
             break
 
     dict_file = open(dict_file)
-    dict = {}
+    dicts = {}
     for d in dict_file:
         (key, offset) = d.split(', ')
-        dict[key] = int(offset)
+        dicts[key] = int(offset)
 
     # index = Index.read(idx_file)
     # for term in index.index:
@@ -38,14 +49,16 @@ def query():
 
         if "-q" in sys.argv:
             query_string = sys.argv[sys.argv.index("-q") + 1:]
+        else:
+            usage()
         term_index = {}
         query_table = {}
         docs_table = {}
         docs_set = set()
         docs_score = {}
         for term in query_string:
-            if term in dict:
-                term_index[term] = Index.read_index_by_offset(idx_file, dict[term]).index[term]
+            if term in dicts:
+                term_index[term] = Index.read_index_by_offset(idx_file, dicts[term]).index[term]
                 for doc in term_index[term]:
                     docs_set.add(int(doc))
                 query_table[term] = {}
@@ -99,15 +112,17 @@ def query():
             if return_count < 0: break
             print("%d\t%.3f" % (int(i), docs_score[i]))
 
-
-
-
     else:
         exit()
     pass
 
 
 if __name__ == "__main__":
-    query()
+    if "-h" in sys.argv:
+        usage()
+    elif "-q" in sys.argv:
+        query()
+    else:
+        usage()
 
 
