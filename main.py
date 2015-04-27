@@ -24,6 +24,7 @@ class WarcHTMLParser(HTMLParser):
     case_folding = False
     stopword_remove = False
     stemming = False
+    position = 0
     stopwords = ['a', 'about', 'above', 'across', 'after', 'again', 'against', 'all', 'almost', 'alone', 'along',
                  'already',
                  'also', 'although', 'always', 'among', 'an', 'and', 'another', 'any', 'anybody', 'anyone', 'anything',
@@ -110,14 +111,19 @@ class WarcHTMLParser(HTMLParser):
                         continue
                 if WarcHTMLParser.case_folding:
                     if WarcHTMLParser.stemming:
-                        self.index.push(stem(w.group(0).lower()), w.start() + offset)
+                        # self.index.push(stem(w.group(0).lower()), w.start() + offset)
+                        self.index.push(stem(w.group(0).lower()), self.position)
                     else:
-                        self.index.push(w.group(0).lower(), w.start() + offset)
+                        # self.index.push(w.group(0).lower(), w.start() + offset)
+                        self.index.push(w.group(0).lower(), self.position)
                 else:
                     if WarcHTMLParser.stemming:
                         self.index.push(stem(w.group(0)), w.start() + offset)
+                        self.index.push(stem(w.group(0)), self.position)
                     else:
-                        self.index.push(w.group(0), w.start() + offset)
+                        # self.index.push(w.group(0), w.start() + offset)
+                        self.index.push(w.group(0), self.position)
+                self.position += 1
 
 
 def processing(_content: str, offset: int) -> PartialIndex:
