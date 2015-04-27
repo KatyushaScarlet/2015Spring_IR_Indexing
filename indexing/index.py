@@ -52,3 +52,47 @@ class Index:
             f.write(bytes(">;\n", "utf8"))
         f.close()
         fdic.close()
+
+    @staticmethod
+    def read(filename):
+        """
+        read plain text index file to partial index
+        :param filename:
+        :return:
+        """
+        f = open(filename, "r")
+        lines = f.readlines()
+        index = Index()
+        for line in lines:
+            (key, posting_list) = line.split(",", maxsplit=1)
+            docs = posting_list[posting_list.find(":") + 2:-4].split(";")
+            for doc in docs:
+                pi = PartialIndex()
+                (docId, position) = doc.split(",", maxsplit=1)
+                positions = position[position.find(":") + 2:-1].split(",")
+                for pos in positions:
+                    pi.push(key, int(pos))
+                index.read_partial_index(docId, pi)
+        return index
+
+    @staticmethod
+    def parse_posting_entry(entry):
+        index = Index()
+        (key, posting_list) = entry.split(",", maxsplit=1)
+        docs = posting_list[posting_list.find(":") + 2:-4].split(";")
+        for doc in docs:
+            pi = PartialIndex()
+            (docId, position) = doc.split(",", maxsplit=1)
+            positions = position[position.find(":") + 2:-1].split(",")
+            for pos in positions:
+                pi.push(key, int(pos))
+            index.read_partial_index(docId, pi)
+        return index
+
+    @staticmethod
+    def read_index_by_offset(filename, offset):
+        f = open(filename, "r")
+        f.seek(offset)
+        line = f.readline()
+        return Index.parse_posting_entry(line)
+
