@@ -3,11 +3,9 @@ __author__ = 'raccoon'
 import sys
 import os
 import math
+
 from warc.parser import Parser
-
 from indexing.index import Index
-
-# file_name = "ClueWeb09_English_Sample.warc"
 
 
 def usage():
