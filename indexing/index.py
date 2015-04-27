@@ -17,7 +17,7 @@ class Index:
         f = open(filename + ".idx", "w")
         fdic = open(filename + ".dict", "w")
         for k, v in ((k, self.index[k]) for k in sorted(self.index)):
-            fdic.write(k + "\n")
+            fdic.write(k + ", " + str(f.tell()) + "\n")
             f.write(k + ", " + str(len(v)) + ":<")
             for doc in v:
                 f.write(str(doc) + ", " + str(len(v[doc])) + ":<")
