@@ -58,3 +58,10 @@ target/
 
 # IDE
 .idea/
+
+# warc
+*.warc
+*.dict
+*.idx
+*.gz
+tmp/
