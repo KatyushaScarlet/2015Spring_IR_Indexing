@@ -7,7 +7,7 @@ import query2
 app = Flask(__name__)
 
 file_name = "01.warc"
-return_count = 10
+return_count = 100
 
 @app.route("/", methods=["GET"])
 def Index():

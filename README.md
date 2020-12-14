@@ -2,8 +2,9 @@ WARC Indexer
 ============
 
 #### 使用方式
-`python3 main.py [warcfile] [-m] [-gz] [-cf] [-sw] [-st]`
-`python3 query.py -w [warcfile] -q [query term]`
+`python3 index.py [warcfile] [-m] [-gz] [-cf] [-sw] [-st]`
+
+`python3 index.py -w [warcfile] -q [query term]`
 
 ##### Parameters:
 1. -m 使用多執行緒製作索引檔
@@ -13,9 +14,9 @@ WARC Indexer
 5. -st use stemming (default is not use)
 
 ##### Example:
-`python3 main.py 01.warc -m -cf -sw -st`
+`python3 index.py 01.warc -m -cf -sw -st`
 
-`python3 query.py -w 01.warc -q hong kong`
+`python3 index.py -w 01.warc -q hong kong`
 
 ##### Output
 1. 產生 filename.warc_index.dict 的字典檔
