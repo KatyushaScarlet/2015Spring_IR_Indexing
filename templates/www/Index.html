@@ -1,0 +1,17 @@
+{% extends "www/Layout.html" %}
+{% block title %}首頁{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-6" style="padding-top: 10%;">
+        <h1 class="display-4 text-center">Searching...</h1>
+        <form action="/Search" method="GET">
+            <div class="form-group ">
+                <input type="text" class="form-control" placeholder="Key words" name="keyword" required>
+            </div>
+            <div class="form-group text-center">
+                <button type="submit" class="btn btn-primary">Go</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
