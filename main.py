@@ -2,10 +2,12 @@ import requests
 import json
 from flask import Flask, request, render_template, session,redirect,url_for
 
+import query2
+
 app = Flask(__name__)
 
-
-
+file_name = "01.warc"
+return_count = 10
 
 @app.route("/", methods=["GET"])
 def Index():
@@ -13,8 +15,11 @@ def Index():
 
 @app.route("/Search",methods=["GET"])
 def Search():
-    keyword = request.values["keyword"]
-    return "searching:%s" % keyword
+    query_string = request.values["query-string"]
+
+    result = query2.query(file_name,query_string,return_count)
+
+    return result
 
 
 if __name__ == "__main__":
