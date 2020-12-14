@@ -14,6 +14,7 @@ WARC Indexer
 
 ##### Example:
 `python3 main.py 01.warc -m -cf -sw -st`
+
 `python3 query.py -w 01.warc -q hong kong`
 
 ##### Output
