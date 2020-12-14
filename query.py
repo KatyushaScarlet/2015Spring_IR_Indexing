@@ -13,7 +13,7 @@ def usage():
     print("\tpython3", sys.argv[0], "[-r number] -w warc_file_name -q free_query_text")
     print("\tpython3", sys.argv[0], "-h")
     print("\r\nParameter:")
-    print("\t", "-r\t", "WARC file, can auto detect index file is exist or not.")
+    print("\t", "-w\t", "WARC file, can auto detect index file is exist or not.")
     print("\t", "-r\t", "control that how many document may display. default is 10")
     print("\t", "-q\t", "free text query term")
     print("\t", "-h\t", "show this helper")
