@@ -16,13 +16,25 @@ def Index():
 @app.route("/Search",methods=["GET"])
 def Search():
     query_string = request.values["query-string"]
+    # to lower case, trim, spit
     query_string = query_string.lower()
     query_string = query_string.strip()
     query_string = query_string.split()
 
     result = query.query(file_name,query_string,return_count)
 
-    return result
+    result_render = ""
+    result_fetch = result[:return_count-1]
+
+    for item in result_fetch:
+        result_render += str(item.doc_id)
+        result_render += "&nbsp;"
+        result_render += str(item.doc_score)
+        result_render += "<br />"
+
+    return result_render
+        
+
 
 
 if __name__ == "__main__":

@@ -168,7 +168,12 @@ def multi_version(_parser: Parser) -> int:
         
         if d is not None:
             result.append(pool.apply_async(processing_async, (count, d.content,)))
-            with open("tmp/"+str(count) + ".html","w",errors="ignore") as out:
+            with open("html/"+str(count) + ".html","w",errors="ignore") as out:
+
+                # debug 
+                if d.content.lower().find("<title>") == -1 :
+                    print("document %d has no title!"%count)
+                    
                 out.write(d.content)
             if count % 1000 == 0:
                 print("waiting...", int(count / 1000))

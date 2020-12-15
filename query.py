@@ -7,6 +7,7 @@ import math
 from warc.parser import Parser
 from indexing.index import Index
 
+import model
 
 def usage():
     print("Usage:")
@@ -143,16 +144,28 @@ def query(file_name,query_string,return_count):
             doc_len += docs_table[doc][terms]["w"] * docs_table[doc][terms]["w"]
         docs_score[doc] = up_part / (math.sqrt(doc_len) * query_len)
 
-    result = ""
+    # result = ""
 
-    result += ("Query terms:%s <br />" % query_string)
-    result += ("Top %d results: <br />" % return_count)
-    result += ("doc#\tscore <br />")
+    # result += ("Query terms:%s <br />" % query_string)
+    # result += ("Top %d results: <br />" % return_count)
+    # result += ("doc#\tscore <br />")
+
+    # for i in sorted(docs_score, key=docs_score.get, reverse=True):
+    #     return_count -= 1
+    #     if return_count < 0:
+    #         break
+    #     result += ("%d\t%.3f <br />" % (int(i), docs_score[i]))
+
+    result = []
 
     for i in sorted(docs_score, key=docs_score.get, reverse=True):
         return_count -= 1
         if return_count < 0:
             break
-        result += ("%d\t%.3f <br />" % (int(i), docs_score[i]))
+
+        queryModel = model.QueryResult()
+        queryModel.doc_id = int(i)
+        queryModel.doc_score = docs_score[i]
+        result.append(queryModel)
 
     return result
