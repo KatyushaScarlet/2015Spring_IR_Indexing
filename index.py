@@ -174,20 +174,23 @@ def multi_version(_parser: Parser) -> int:
         
         if d is not None:
             result.append(pool.apply_async(processing_async, (count, d.content,)))
-            with open("html/"+str(count) + ".html","w",errors="ignore") as out:
+            with open("html/"+str(count) + ".html","w",encoding="utf-8",errors="ignore") as out:
                 out.write(d.content)
 
             # get title
-            soup = BeautifulSoup(d.content, "lxml")
-            soup.prettify()
-            tag = soup.find('title')
+
             title_name = ""
-            if tag:
-                title_name = str(tag.text).replace("\n", "").replace("\r", "").strip()
+            title_tag = re.compile(r'<(title|TITLE)[^>]*>(.*?)</(title|TITLE)>')
+            title_result = title_tag.search((d.content))
+
+            if title_result:
+                title_name = title_result.group().replace('<title>', '').replace('</title>', '').replace('\n', '').replace('\r', '').replace('<TITLE>', '').replace('</TITLE>', '').strip()
+                
                 if title_name == "":
                     title_name = "Untitle"
             else:
                 title_name = "Untitle"
+
             title_names += title_name + "\n"
 
             if count % 1000 == 0:
@@ -213,7 +216,7 @@ def multi_version(_parser: Parser) -> int:
                 
             break
 
-    title_file = open("html/titles.txt","w",errors="ignore")
+    title_file = open("html/titles.txt","w",encoding="utf-8",errors="ignore")
     title_file.write(title_names)
 
     print("----------------------------------------------------------")
