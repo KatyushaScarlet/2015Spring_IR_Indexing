@@ -1,0 +1,39 @@
+{% extends "www/Layout.html" %}
+{% block title %}Search result{% endblock %}
+{% block content %}
+<div class="text-center">
+    {% if count > 0 %}
+        <h1 class="display-4">Get {{count}} result</h1>
+    {% else %}
+        <h1 class="display-4">Nothing here</h1>
+    {% endif %}
+</div>
+<div>
+    {% if count > 0 %}
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th class="text-nowrap">#</th>
+                <th class="text-nowrap">Score</th>
+                <th class="text-nowrap">Title</th>
+                <th class="text-nowrap">View</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for document in documentList %}
+            <tr>
+                <td>{{document.doc_id}}</td>
+                <td>{{document.doc_score}}</td>
+                <td>{{document.doc_title}}</td>
+                <td><a href="/Retrieve?id={{document.doc_id}}" target="_blank">View</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="text-center">
+        <a type="button" class="btn btn-primary" href="/">Return</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
