@@ -18,6 +18,7 @@ from indexing.partial_index import PartialIndex
 from indexing.index import Index
 
 from bs4 import BeautifulSoup
+import json
 
 
 class WarcHTMLParser(HTMLParser):
@@ -182,10 +183,12 @@ def multi_version(_parser: Parser) -> int:
             tag = soup.find('title')
             title_name = ""
             if tag:
-                title_name = str(tag.text)
+                title_name = str(tag.text).replace("\n", "").replace("\r", "").strip()
+                if title_name == "":
+                    title_name = "Untitle"
             else:
-                title_name = "No Title"
-            title_names += title_name.strip() + "\n"
+                title_name = "Untitle"
+            title_names += title_name + "\n"
 
             if count % 1000 == 0:
                 print("waiting...", int(count / 1000))
