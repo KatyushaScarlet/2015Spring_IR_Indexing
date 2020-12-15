@@ -34,7 +34,11 @@ def Search():
 
     return result_render
         
-
+@app.route("/Fetch",methods=["GET"])
+def Fetch():
+    doc_id = request.values["id"]
+    f = open("html/"+str(doc_id) + ".html","r",errors="ignore",encoding="utf-8")
+    return f.read()
 
 
 if __name__ == "__main__":

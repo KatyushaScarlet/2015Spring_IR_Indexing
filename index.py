@@ -17,6 +17,8 @@ from html.parser import HTMLParser
 from indexing.partial_index import PartialIndex
 from indexing.index import Index
 
+from bs4 import BeautifulSoup
+
 
 class WarcHTMLParser(HTMLParser):
     lineCount = []
@@ -161,6 +163,9 @@ def multi_version(_parser: Parser) -> int:
     print(tmp_dir_name)
     os.mkdir(tmp_dir_name)
 
+    # titles
+    title_names = ""
+
     while True:
         d = _parser.fetch()
         #print (d.content)
@@ -169,12 +174,19 @@ def multi_version(_parser: Parser) -> int:
         if d is not None:
             result.append(pool.apply_async(processing_async, (count, d.content,)))
             with open("html/"+str(count) + ".html","w",errors="ignore") as out:
-
-                # debug 
-                if d.content.lower().find("<title>") == -1 :
-                    print("document %d has no title!"%count)
-                    
                 out.write(d.content)
+
+            # get title
+            soup = BeautifulSoup(d.content, "lxml")
+            soup.prettify()
+            tag = soup.find('title')
+            title_name = ""
+            if tag:
+                title_name = str(tag.text)
+            else:
+                title_name = "No Title"
+            title_names += title_name.strip() + "\n"
+
             if count % 1000 == 0:
                 print("waiting...", int(count / 1000))
                 pool.close()
@@ -197,6 +209,10 @@ def multi_version(_parser: Parser) -> int:
                 
                 
             break
+
+    title_file = open("html/titles.txt","w",errors="ignore")
+    title_file.write(title_names)
+
     print("----------------------------------------------------------")
     print("Analysis document:")
     end_time = time.time()
