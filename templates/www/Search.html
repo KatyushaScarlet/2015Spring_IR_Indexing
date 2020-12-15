@@ -30,6 +30,8 @@
             {% endfor %}
         </tbody>
     </table>
+    {{ pagination.info }}
+    {{ pagination.links }}
     {% else %}
     <div class="text-center">
         <a type="button" class="btn btn-primary" href="/">Return</a>

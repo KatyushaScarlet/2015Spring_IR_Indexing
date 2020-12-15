@@ -1,7 +1,7 @@
 import requests
 import json
 from flask import Flask, request, render_template, session,redirect,url_for
-
+from flask_paginate import Pagination, get_page_parameter
 import query
 
 app = Flask(__name__)
@@ -20,7 +20,7 @@ def Index():
     return render_template("www/Index.html")
 
 @app.route("/Search",methods=["GET"])
-def Search():
+def Search(limit=10):
     query_string = request.values["query"]
     # to lower case, trim, spit
     query_string = query_string.lower()
@@ -32,7 +32,10 @@ def Search():
     # result_render = ""
     # result_fetch = result[:return_count-1]
     count = len(result_fetch)
-
+    page = request.args.get(get_page_parameter(), type=int, default=1)
+    pagination = Pagination(page=page, total=count, css_framework='bootstrap4',per_page=10)
+    start = (page - 1) * limit
+    end = page * limit if count > page * limit else count
     # for item in result_fetch:
     #     result_render += str(item.doc_id)
     #     result_render += "&nbsp;"
@@ -42,11 +45,11 @@ def Search():
     #     result_render += "<br />"
 
     # return result_render
-
+    ret = result_fetch[start:end]
     for item in result_fetch:
         item.doc_title = str(get_document_title(item.doc_id))
 
-    return render_template("www/Search.html",count=count,documentList=result_fetch)
+    return render_template("www/Search.html", count=count, documentList=ret, pagination=pagination,search=search, record_name='result_fetch')
         
 @app.route("/Retrieve",methods=["GET"])
 def Retrieve():
