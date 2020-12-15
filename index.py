@@ -9,6 +9,7 @@ import random
 import string
 import gc
 
+import ctypes
 from stemming.porter2 import stem
 
 from warc.parser import Parser
@@ -162,10 +163,13 @@ def multi_version(_parser: Parser) -> int:
 
     while True:
         d = _parser.fetch()
+        #print (d.content)
         count += 1
+        
         if d is not None:
             result.append(pool.apply_async(processing_async, (count, d.content,)))
-
+            with open("tmp/"+str(count) + ".html","w",errors="ignore") as out:
+                out.write(d.content)
             if count % 1000 == 0:
                 print("waiting...", int(count / 1000))
                 pool.close()
@@ -180,7 +184,13 @@ def multi_version(_parser: Parser) -> int:
             pool.join()
             for r in result:
                 cnt, idx = r.get()
+                #print(idx)
+                #print(getattr(idx,'index'))
+                #get_value=ctypes.cast(idx, ctypes.py_object).value #读取地址中的变量
+                #print(get_value)
                 idx.dump(tmp_dir_name + "/" + str(cnt))
+                
+                
             break
     print("----------------------------------------------------------")
     print("Analysis document:")
@@ -229,9 +239,10 @@ def single_version(_parser: Parser):
                 html_start = c.search(d.content)
                 # result = processing(d.content[html_start.span()[1]+1:])
                 html = d.content[html_start.span()[1]:]
+                
                 result = processing(html, html_start.span()[1])
                 result.dump(tmp_dir_name + "/" + str(count))
-
+                
                 if count == 1:
                     pass
                 if count % 1000 == 0:

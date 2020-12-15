@@ -8,40 +8,26 @@ from warc.parser import Parser
 from indexing.index import Index
 
 
-def usage():
-    print("Usage:")
-    print("\tpython3", sys.argv[0], "[-r number] -w warc_file_name -q free_query_text")
-    print("\tpython3", sys.argv[0], "-h")
-    print("\r\nParameter:")
-    print("\t", "-w\t", "WARC file, can auto detect index file is exist or not.")
-    print("\t", "-r\t", "control that how many document may display. default is 10")
-    print("\t", "-q\t", "free text query term")
-    print("\t", "-h\t", "show this helper")
-    print("\r\nExample:")
-    print("python3", sys.argv[0], "-w 00.warc", "-q hong kong")
-    exit(0)
-
-
-def query():
-    file_name = ""
-    return_count = 10
+def query(file_name,query_string,return_count):
+    # file_name = ""
+    # return_count = 10
     N = 0
 
-    # parse parameters
-    if len(sys.argv) >= 3:
-        if "-w" in sys.argv:
-            file_name = sys.argv[sys.argv.index("-w") + 1]
-        else:
-            usage()
-        if "-r" in sys.argv:
-            return_count = int(sys.argv[sys.argv.index("-r") + 1])
+    # # parse parameters
+    # if len(sys.argv) >= 3:
+    #     if "-w" in sys.argv:
+    #         file_name = sys.argv[sys.argv.index("-w") + 1]
+    #     else:
+    #         usage()
+    #     if "-r" in sys.argv:
+    #         return_count = int(sys.argv[sys.argv.index("-r") + 1])
 
-        if "-q" in sys.argv:
-            query_string = sys.argv[sys.argv.index("-q") + 1:]
-        else:
-            usage()
-    else:
-        usage()
+    #     if "-q" in sys.argv:
+    #         query_string = sys.argv[sys.argv.index("-q") + 1:]
+    #     else:
+    #         usage()
+    # else:
+    #     usage()
 
     # set idx file and dict file path
     idx_file = file_name + "_index.idx"
@@ -81,6 +67,7 @@ def query():
     docs_score = {}
     # Calculate query's weight
     for term in query_string:
+        
         if term in dicts:
             term_index[term] = Index.read_index_by_offset(idx_file, dicts[term]).index[term]
             # add doc# to set
@@ -89,8 +76,10 @@ def query():
             query_table[term] = {}
             query_table[term]["tf"] = 1
             query_table[term]["df"] = len(term_index[term])
-            query_table[term]["idf"] = math.log(N / query_table[term]["df"], 10)
+            #print (query_table[term]["df"])
+            query_table[term]["idf"] = math.log10(N / query_table[term]["df"])
             query_table[term]["w"] = (1 + math.log(query_table[term]["tf"])) * query_table[term]["idf"]
+            #print (query_table[term]["w"])
         else:
             term_index[term] = {}
             query_table[term] = {}
@@ -98,6 +87,7 @@ def query():
             query_table[term]["df"] = 0
             query_table[term]["idf"] = 0
             query_table[term]["w"] = 0
+            #print (query_table[term]["w"])
 
     # Calculate query's weight
     euclidean_length = 0
@@ -112,14 +102,15 @@ def query():
             docs_table[element][term]["tf"] = 0
             if element in term_index[term]:
                 docs_table[element][term]["tf"] = len(term_index[term][str(element)])
+                #print (docs_table[element][term]["tf"])
             euclidean_length += docs_table[element][term]["tf"] * docs_table[element][term]["tf"]
     euclidean_length = math.sqrt(euclidean_length)
 
     for doc in docs_table:
         for term in query_string:
             if docs_table[doc][term]["tf"] > 0:
-                docs_table[doc][term]["w"] = (1 + math.log(docs_table[doc][term]["tf"], 10)) * math.log(
-                    query_table[term]["df"], 10)
+                docs_table[doc][term]["w"] = (1 + math.log10(docs_table[doc][term]["tf"])) * (math.log10(query_table[term]["df"])+1)
+                #print (math.log10(query_table[term]["df"]))
             else:
                 docs_table[doc][term]["w"] = 0
 
@@ -127,30 +118,27 @@ def query():
     for term in query_string:
         query_len += query_table[term]["w"] * query_table[term]["w"]
     query_len = math.sqrt(query_len)
+    #print(query_len)
 
     for doc in docs_table:
         up_part = 0
         doc_len = 0
         for terms in query_string:
+            #print (terms,docs_table[doc][terms]["w"],query_table[terms]["w"])
             up_part += docs_table[doc][terms]["w"] * query_table[terms]["w"]
             doc_len += docs_table[doc][terms]["w"] * docs_table[doc][terms]["w"]
         docs_score[doc] = up_part / (math.sqrt(doc_len) * query_len)
 
-    print("Query terms:", query_string)
-    print("Top", return_count, "results:")
-    print("doc#\tscore")
+    result = ""
+
+    result += ("Query terms:%s <br />" % query_string)
+    result += ("Top %d results: <br />" % return_count)
+    result += ("doc#\tscore <br />")
 
     for i in sorted(docs_score, key=docs_score.get, reverse=True):
         return_count -= 1
         if return_count < 0:
             break
-        print("%d\t%.3f" % (int(i), docs_score[i]))
+        result += ("%d\t%.3f <br />" % (int(i), docs_score[i]))
 
-
-if __name__ == "__main__":
-    if "-h" in sys.argv:
-        usage()
-    elif "-q" in sys.argv:
-        query()
-    else:
-        usage()
+    return result
