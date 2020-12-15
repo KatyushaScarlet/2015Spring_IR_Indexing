@@ -16,6 +16,9 @@ def Index():
 @app.route("/Search",methods=["GET"])
 def Search():
     query_string = request.values["query-string"]
+    query_string = query_string.lower()
+    query_string = query_string.strip()
+    query_string = query_string.split()
 
     result = query.query(file_name,query_string,return_count)
 
