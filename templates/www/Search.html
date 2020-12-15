@@ -3,9 +3,9 @@
 {% block content %}
 <div class="text-center">
     {% if count > 0 %}
-        <h1 class="display-4">Return {{count}} results</h1>
+    <h1 class="display-4">Retrieved {{count}} results</h1>
     {% else %}
-        <h1 class="display-4">Nothing here</h1>
+    <h1 class="display-4">Nothing here</h1>
     {% endif %}
 </div>
 <div>
@@ -31,7 +31,9 @@
         </tbody>
     </table>
     {{ pagination.info }}
+    <ul class="pagination justify-content-center ">
     {{ pagination.links }}
+    </ul>
     {% else %}
     <div class="text-center">
         <a type="button" class="btn btn-primary" href="/">Return</a>

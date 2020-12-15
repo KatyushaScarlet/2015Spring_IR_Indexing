@@ -20,8 +20,13 @@ def Index():
     return render_template("www/Index.html")
 
 @app.route("/Search",methods=["GET"])
-def Search(limit=10):
+def Search():
+    search = False
+    limit=request.values["limit"]
+    limit=int(limit)
     query_string = request.values["query"]
+    if query_string:
+        search = True
     # to lower case, trim, spit
     query_string = query_string.lower()
     query_string = query_string.strip()
@@ -33,7 +38,7 @@ def Search(limit=10):
     # result_fetch = result[:return_count-1]
     count = len(result_fetch)
     page = request.args.get(get_page_parameter(), type=int, default=1)
-    pagination = Pagination(page=page, total=count, css_framework='bootstrap4',per_page=10)
+    pagination = Pagination(page=page, total=count, css_framework='bootstrap4',per_page=limit)
     start = (page - 1) * limit
     end = page * limit if count > page * limit else count
     # for item in result_fetch:
