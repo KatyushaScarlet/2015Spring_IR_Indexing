@@ -8,6 +8,20 @@ from warc.parser import Parser
 from indexing.index import Index
 
 
+def usage():
+    print("Usage:")
+    print("\tpython3", sys.argv[0], "[-r number] -w warc_file_name -q free_query_text")
+    print("\tpython3", sys.argv[0], "-h")
+    print("\r\nParameter:")
+    print("\t", "-w\t", "WARC file, can auto detect index file is exist or not.")
+    print("\t", "-r\t", "control that how many document may display. default is 10")
+    print("\t", "-q\t", "free text query term")
+    print("\t", "-h\t", "show this helper")
+    print("\r\nExample:")
+    print("python3", sys.argv[0], "-w 00.warc", "-q hong kong")
+    exit(0)
+
+
 def query(file_name,query_string,return_count):
     # file_name = ""
     # return_count = 10
