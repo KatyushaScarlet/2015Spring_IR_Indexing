@@ -65,4 +65,4 @@ def get_document_title(id):
     return titles[int(id)-1]
 
 if __name__ == "__main__":
-    app.run(debug = True, host = "0.0.0.0", port=8000)
+    app.run(debug = True, host = "0.0.0.0", port=8080)
