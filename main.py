@@ -4,7 +4,10 @@ from flask import Flask, request, render_template, session,redirect,url_for
 from flask_paginate import Pagination, get_page_parameter
 import query
 
-app = Flask(__name__)
+app = Flask(__name__,
+            static_url_path='', 
+            static_folder='static',
+            template_folder='templates')
 
 file_name = "01.warc"
 return_count = 10000
@@ -18,6 +21,10 @@ title_file.close()
 @app.route("/", methods=["GET"])
 def Index():
     return render_template("www/Index.html")
+
+@app.route("/About", methods=["GET"])
+def About():
+    return render_template("www/About.html")
 
 @app.route("/Search",methods=["GET"])
 def Search():
@@ -66,4 +73,4 @@ def get_document_title(id):
     return titles[int(id)-1]
 
 if __name__ == "__main__":
-    app.run(debug = True, host = "0.0.0.0", port=8000)
+    app.run(debug = True, host = "0.0.0.0", port=8100)

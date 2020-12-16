@@ -1,9 +1,9 @@
 {% extends "www/Layout.html" %}
-{% block title %}Search result{% endblock %}
+{% block title %}Get {{count}} results{% endblock %}
 {% block content %}
 <div class="text-center">
     {% if count > 0 %}
-    <h1 class="display-4">Retrieved {{count}} results</h1>
+    <h1 class="display-4">Get {{count}} results</h1>
     {% else %}
     <h1 class="display-4">Nothing here</h1>
     {% endif %}
