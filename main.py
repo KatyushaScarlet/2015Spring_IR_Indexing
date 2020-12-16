@@ -41,22 +41,14 @@ def Search():
 
     result_fetch = query.query(file_name,query_string,return_count)
 
-    # result_render = ""
-    # result_fetch = result[:return_count-1]
+
     count = len(result_fetch)
     page = request.args.get(get_page_parameter(), type=int, default=1)
     pagination = Pagination(page=page, total=count, css_framework='bootstrap4',per_page=limit)
     start = (page - 1) * limit
     end = page * limit if count > page * limit else count
-    # for item in result_fetch:
-    #     result_render += str(item.doc_id)
-    #     result_render += "&nbsp;"
-    #     result_render += str(item.doc_score)
-    #     result_render += "&nbsp;"
-    #     result_render += str(get_document_title(item.doc_id))
-    #     result_render += "<br />"
 
-    # return result_render
+
     ret = result_fetch[start:end]
     for item in result_fetch:
         item.doc_title = str(get_document_title(item.doc_id))
@@ -73,4 +65,4 @@ def get_document_title(id):
     return titles[int(id)-1]
 
 if __name__ == "__main__":
-    app.run(debug = True, host = "0.0.0.0", port=8100)
+    app.run(debug = True, host = "0.0.0.0", port=8000)
