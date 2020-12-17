@@ -29,3 +29,14 @@ You can also run `query.py` to make query without web interface.
 `python3 query.py -w 01.warc -q hong kong`
 
 `python3 main.py`
+
+## Screenshot
+
+### Index
+![index](/screenshot/index.png)
+
+### Search
+![search](/screenshot/search.png)
+
+### About
+![about](/screenshot/about.png)
