@@ -1,4 +1,4 @@
-WARC Indexer
+WARC Search Engine
 ============
 
 ## Usage
