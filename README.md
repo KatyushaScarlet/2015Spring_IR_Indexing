@@ -9,6 +9,7 @@ WARC Indexer
 `python3 main.py`
 
 ### index.py
+Use for construct index file
 1. -m use multi-thread
 2. -gz use gzip compress index file
 3. -cf use case folding
@@ -17,7 +18,7 @@ WARC Indexer
 ### main.py
 After building index file through index.py, run `main.py` to open the web interface.
 
-The default url is `127.0.0.1:8080`.
+The default url is `http://127.0.0.1:8080`.
 
 ### query.py
 You can also run `query.py` to make query without web interface.
