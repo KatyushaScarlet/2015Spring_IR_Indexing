@@ -159,8 +159,13 @@ def multi_version(_parser: Parser) -> int:
     count = 0
     result = []
 
+    tmp_dir_path = "tmp/"
+    check_dir(tmp_dir_path)
+    html_dir_path = "html/"
+    check_dir(html_dir_path)
+
     start_time = time.time()
-    tmp_dir_name = "tmp/" + get_temp_dir_name()
+    tmp_dir_name = tmp_dir_path + get_temp_dir_name()
     print(tmp_dir_name)
     os.mkdir(tmp_dir_name)
 
@@ -174,7 +179,7 @@ def multi_version(_parser: Parser) -> int:
         
         if d is not None:
             result.append(pool.apply_async(processing_async, (count, d.content,)))
-            with open("html/"+str(count) + ".html","w",encoding="utf-8",errors="ignore") as out:
+            with open(html_dir_path+str(count) + ".html","w",encoding="utf-8",errors="ignore") as out:
                 out.write(d.content)
 
             # get title
@@ -250,11 +255,15 @@ def multi_version(_parser: Parser) -> int:
 
 def single_version(_parser: Parser):
     count = 0
+
+    tmp_dir_path = "tmp/"
+    check_dir(tmp_dir_path)
+
     start_tiem = time.time()
     try:
         # _parser.goto(1)
 
-        tmp_dir_name = "tmp/" + get_temp_dir_name()
+        tmp_dir_name = tmp_dir_path + get_temp_dir_name()
         print("create tmp index directory:", tmp_dir_name)
         os.mkdir(tmp_dir_name)
         # make index
@@ -355,6 +364,11 @@ def main():
     print("Average", (time.time() - starttime) * 1000 / count, "ms")
     print("DPS", count / (time.time() - starttime), "ps")
 
+def check_dir(dir_path):
+    if os.path.exists(dir_path):
+        os.rmdir(dir_path)
+
+    os.makedirs(dir_path)
 
 if __name__ == "__main__":
     main()
