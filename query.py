@@ -169,3 +169,39 @@ def query(file_name,query_string,return_count):
         result.append(queryModel)
 
     return result
+
+if __name__ == "__main__":
+    if "-h" in sys.argv:
+        usage()
+    elif "-q" in sys.argv:
+        if len(sys.argv) >= 3:
+            if "-w" in sys.argv:
+                file_name = sys.argv[sys.argv.index("-w") + 1]
+            else:
+                usage()
+            if "-r" in sys.argv:
+                return_count = int(sys.argv[sys.argv.index("-r") + 1])
+            else:
+                return_count = 1000
+            if "-q" in sys.argv:
+                query_string = sys.argv[sys.argv.index("-q") + 1:]
+            else:
+                usage()
+
+            result = ""
+
+            result += ("Query terms:%s\n" % query_string)
+            result += ("Top %d results:\n" % return_count)
+            result += ("doc#\tscore\n")
+
+            query_result = query(file_name=file_name,query_string=query_string,return_count=return_count)
+
+            for item in query_result:
+                result += ("%d\t%.3f\n" % (int(item.doc_id),item.doc_score))
+                
+            print(result)
+
+        else:
+            usage()
+    else:
+        usage()
