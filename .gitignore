@@ -64,5 +64,6 @@ target/
 *.dict
 *.idx
 *.gz
+!.keep
 tmp/*
 html/*
