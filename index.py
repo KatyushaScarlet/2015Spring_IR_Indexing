@@ -17,8 +17,7 @@ from html.parser import HTMLParser
 from indexing.partial_index import PartialIndex
 from indexing.index import Index
 
-from bs4 import BeautifulSoup
-import json
+import shutil
 
 
 class WarcHTMLParser(HTMLParser):
@@ -198,8 +197,9 @@ def multi_version(_parser: Parser) -> int:
 
             title_names += title_name + "\n"
 
+            print("Now processing: %d" % count)
             if count % 1000 == 0:
-                print("waiting...", int(count / 1000))
+                # print("waiting...", int(count / 1000))
                 pool.close()
                 pool.join()
                 for r in result:
@@ -229,9 +229,9 @@ def multi_version(_parser: Parser) -> int:
     end_time = time.time()
     print(end_time - start_time, "s")
     print("Average:", (end_time - start_time) * 1000 / count, "ms")
-    print("Document process per second:", count / (end_time - start_time), "ps")
+    print("DPS:", count / (end_time - start_time), "ps")
     print("----------------------------------------------------------")
-    print("build full index ......")
+    print("Building full index ......")
     start_time = time.time()
     idx = Index()
     for i in range(1, count):
@@ -340,13 +340,13 @@ def main():
 
     starttime = time.time()
 
-    print("Start......")
+    print("Start building index")
     if multi_flag:
         count, index = multi_version(p)
     else:
         count, index = single_version(p)
 
-    print("dump index from memory to file " + f + ".index.txt")
+    print("Dump index from memory to " + f + ".index.txt")
     dump_start_time = time.time()
     if gzip_flag:
         index.dump_gzip(f + "_index")
@@ -354,19 +354,20 @@ def main():
         index.dump(f + "_index")
     dump_end_time = time.time()
     print("----------------------------------------------------------")
-    print("dump index:")
+    print("Dump index:")
     print(dump_end_time - dump_start_time, "s")
     print("----------------------------------------------------------")
-    print("finish")
+    print("Finish")
     print("----------------------------------------------------------")
-    print("Total time analysis:")
+    print("Total time:")
     print(time.time() - starttime, "s")
     print("Average", (time.time() - starttime) * 1000 / count, "ms")
     print("DPS", count / (time.time() - starttime), "ps")
 
 def check_dir(dir_path):
     if os.path.exists(dir_path):
-        os.rmdir(dir_path)
+        print("Remove last result (%s)" % dir_path)
+        shutil.rmtree(dir_path,ignore_errors=True)
 
     os.makedirs(dir_path)
 
