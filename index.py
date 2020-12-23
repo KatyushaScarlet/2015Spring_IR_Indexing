@@ -320,7 +320,7 @@ def single_version(_parser: Parser):
 def main():
     f = sys.argv[1]
 
-    multi_flag = False
+    multi_flag = True
     gzip_flag = False
 
     if "-st" in sys.argv:
@@ -331,8 +331,8 @@ def main():
         WarcHTMLParser.case_folding = True
     if "-gz" in sys.argv:
         gzip_flag = True
-    if "-m" in sys.argv:
-        multi_flag = True
+    # if "-m" in sys.argv:
+    #     multi_flag = True
 
     p = Parser(f)
     # skip header record
