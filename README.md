@@ -12,7 +12,7 @@ WARC Search Engine
 Use for construct index file
 1. -gz use gzip compress index file
 2. -cf use case folding
-3. -sw use stopword removal
+3. -sw use stop word removal
 4. -st use stemming
 ### main.py
 After building index file through index.py, run `main.py` to open the web interface.
