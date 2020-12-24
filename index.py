@@ -24,9 +24,9 @@ class WarcHTMLParser(HTMLParser):
     lineCount = []
     index = PartialIndex()
     pre_offset = 0
-    case_folding = False
-    stopword_remove = False
-    stemming = False
+    case_folding = True
+    stopword_remove = True
+    stemming = True
     position = 0
     stopwords = ['a', 'about', 'above', 'across', 'after', 'again', 'against', 'all', 'almost', 'alone', 'along',
                  'already',
@@ -321,16 +321,16 @@ def main():
     f = sys.argv[1]
 
     multi_flag = True
-    gzip_flag = False
+    # gzip_flag = False
 
-    if "-st" in sys.argv:
-        WarcHTMLParser.stemming = True
-    if "-sw" in sys.argv:
-        WarcHTMLParser.stopword_remove = True
-    if "-cf" in sys.argv:
-        WarcHTMLParser.case_folding = True
-    if "-gz" in sys.argv:
-        gzip_flag = True
+    # if "-st" in sys.argv:
+    #     WarcHTMLParser.stemming = True
+    # if "-sw" in sys.argv:
+    #     WarcHTMLParser.stopword_remove = True
+    # if "-cf" in sys.argv:
+    #     WarcHTMLParser.case_folding = True
+    # if "-gz" in sys.argv:
+    #     gzip_flag = True
     # if "-m" in sys.argv:
     #     multi_flag = True
 
